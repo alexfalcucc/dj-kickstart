@@ -46,12 +46,14 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = '{{ project_name }}.urls'
@@ -88,6 +90,32 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR.child('staticfiles')
 STATIC_URL = '/static/'
+
+
+# Cache
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
+CACHE_ACTIVE = config('CACHE_ACTIVE', default=False, cast=bool)
+
+if CACHE_ACTIVE:
+    CACHES = {
+        'default': {
+                'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+                'BINARY': True,
+                'LOCATION': config('CACHE_LOCATION'),
+                'OPTIONS': {
+                    'ketama': True,
+                    'tcp_nodelay': True,
+                },
+                'TIMEOUT': config('CACHE_TIMEOUT', default=500, cast=int),
+            },
+    }
+else:  # Assume development mode
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 
 # Templates
