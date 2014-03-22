@@ -26,6 +26,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 TEMPLATE_DEBUG = DEBUG
 
+TESTING = 'test' in sys.argv
+
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '.herokuapp.com']
 
 
@@ -86,3 +88,56 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR.child('staticfiles')
 STATIC_URL = '/static/'
+
+
+# Logging
+def skip_on_testing(record):
+    return not TESTING
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'normal': {
+            'format': '%(levelname)s %(name)s %(message)s'
+        },
+        'sqlformatter': {
+            '()': 'sqlformatter.SqlFormatter',
+            'format': '%(levelname)s %(message)s',
+        },
+    },
+    'filters': {
+     'require_debug_true': {
+         '()': 'django.utils.log.RequireDebugTrue',
+         },
+     'skip_on_testing': {
+        '()': 'django.utils.log.CallbackFilter',
+        'callback': skip_on_testing,
+        },
+    },
+    'handlers': {
+        'stderr': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'normal',
+            'filters': ['skip_on_testing'],
+        },
+        'sqlhandler': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'sqlformatter',
+            'filters': ['require_debug_true'],
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['sqlhandler'],
+            'level': 'DEBUG',
+        },
+        '{{ project_name }}': {
+            'handlers': ['stderr'],
+            'level': 'INFO',
+        },
+    },
+}
