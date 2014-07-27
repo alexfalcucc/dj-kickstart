@@ -137,10 +137,6 @@ LOGGING = {
         'normal': {
             'format': '%(levelname)s %(name)s %(message)s'
         },
-        'sqlformatter': {
-            '()': 'sqlformatter.SqlFormatter',
-            'format': '%(levelname)s %(message)s',
-        },
     },
     'filters': {
      'require_debug_true': {
@@ -158,18 +154,8 @@ LOGGING = {
             'formatter': 'normal',
             'filters': ['skip_on_testing'],
         },
-        'sqlhandler': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'sqlformatter',
-            'filters': ['require_debug_true'],
-        },
     },
     'loggers': {
-        'django.db.backends': {
-            'handlers': ['sqlhandler'],
-            'level': 'DEBUG',
-        },
         '{{ project_name }}': {
             'handlers': ['stderr'],
             'level': 'INFO',
