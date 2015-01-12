@@ -47,6 +47,10 @@ INSTALLED_APPS = (
     '{{ project_name }}.core',
 )
 
+INSTALLED_APPS += (
+    'django_extensions',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
