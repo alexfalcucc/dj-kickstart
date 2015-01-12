@@ -41,13 +41,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
-    'devserver',
     'south',
     '{{ project_name }}.core',
 )
 
 INSTALLED_APPS += (
+    'debug_toolbar',
+    'devserver',
     'django_extensions',
 )
 
