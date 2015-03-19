@@ -6,6 +6,7 @@ Usage
     django-admin.py startproject --template=https://github.com/alexfalcucc/dj-kickstart/archive/master.zip -e py,env -n Procfile PROJECTNAME
     mv rename-as-.env .env
     pip install -r requirements.txt
+    heroku plugins:install git://github.com/ddollar/heroku-config.git
 
 License
 -------
